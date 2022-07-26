@@ -1,4 +1,6 @@
 from flask import Blueprint, jsonify, redirect, render_template, request, url_for, flash
+from sqlalchemy.exc import IntegrityError
+
 from utils.db import db, ma
 from models.contact import Contacts, ContactsSchema
 
@@ -26,13 +28,15 @@ def add_contact():
         fullname = request.form['fullname']
         phone = request.form['phone']
         email = request.form['email']
-        
-        contact = Contacts(fullname, phone, email)
 
-        db.session.add(contact)
-        db.session.commit()
-
-        flash('Contact added successfully')
+        try:
+            contact = Contacts(fullname, phone, email)
+            db.session.add(contact)
+            db.session.commit()
+            flash('Contact added successfully', 'info')
+        except IntegrityError:
+            db.session.rollback()
+            flash('The E-mail contact already exists!', 'error')
         
         return redirect(url_for('contacts.index'))
         

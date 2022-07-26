@@ -6,10 +6,10 @@ class Contacts(db.Model):
     phone = db.Column(db.String(50))
     email = db.Column(db.String(50), unique=True)
 
-    # def __init__(self, fullname, phone, email):
-    #     self.fullname = fullname
-    #     self.phone = phone
-    #     self.email = email
+    def __init__(self, fullname, phone, email):
+        self.fullname = fullname
+        self.phone = phone
+        self.email = email
 
     # def __repr__(self):
     #     return f'fullname: {self.fullname}, phone: {self.phone}, email: {self.email}'
