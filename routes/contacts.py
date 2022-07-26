@@ -7,12 +7,18 @@ contacts = Blueprint('contacts', __name__)
 @contacts.route('/')
 def index():
     contacts = Contacts.query.all()
+    
+    return render_template('index.html', contacts=contacts)
+
+
+@contacts.route('/api')
+def index_api():
+    contacts = Contacts.query.all()
     contact_schema = ContactsSchema(many=True)
     response = contact_schema.dump(contacts)
-    print(response)
-    # return jsonify({'response', response})
-    # return render_template('index.html', contacts=contacts)
+    
     return jsonify({'response': response})
+
 
 @contacts.route('/add_contact', methods=['POST'])
 def add_contact():
@@ -37,6 +43,7 @@ def get_contact(id):
     
     return render_template('edit-contact.html', contact=contact)
 
+
 @contacts.route('/update/<id>', methods=['POST'])
 def update_contact(id):
     if request.method == 'POST':
@@ -50,6 +57,7 @@ def update_contact(id):
     
         flash('Contact updated successfully')
         return redirect(url_for('contacts.index'))
+
 
 @contacts.route('/delete/<int:id>')
 def delete_contact(id):
